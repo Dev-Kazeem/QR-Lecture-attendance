@@ -1,0 +1,15 @@
+{% if status == 'success' %}
+  
+  <h2>Attendance Marked</h2>
+  <p>You are checked in for {{ session.course.name }}</p>
+
+{% elif status == 'already' %}
+  
+  <h2>Already Check In</h2>
+
+{% elif status == 'expired' %}
+
+  <h2> QR Expired </h2>
+  <p>Ask lecturer for the new QR code.</p>
+
+{% endif %}  

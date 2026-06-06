@@ -1,0 +1,39 @@
+<h2>{{ session.course.code }} - Active Session</h2>
+<p>QR refreshes every 45s. Scan within 2 minutes .</p>
+<img src="" id="qr-img" width="250"> 
+<p id="timer">Refreshing In 45s...</p>
+<p><a href="{% url 'attendance_app:end_session' session.id %}">End Session</a></p>
+
+<h3>Check In: <span id="count">0</span></h3>
+
+<script>
+    let timeLeft = 45;
+
+    function refreshQR() {
+        fetch("{% url 'attendance_app:get_qr_image' session.id %}")
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('qr-img').src = "data:image/png;base64," + data.qr_b64;
+          timeLeft = 45;
+        });
+    }
+
+    function updateTimer() {
+        document.getElementById('timer').innerText = `Refreshing in ${timeLeft}s...`;
+        timeLeft--;
+        if (timeLeft < 0) refreshQR();
+    }
+
+    function refreshCount() {
+        fetch("{% url 'attendance_app:attendance_list' session.id %}?json=1")
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('count').innerText = data.count;
+        });
+    }
+
+    // initialized
+    refreshQR();
+    setInterval(updateTimer, 1000);
+    setInterval(refreshCount, 5000);
+</script>
