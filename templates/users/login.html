@@ -1,7 +1,21 @@
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
-<p>You don't have an account? <a href="{% url 'Users_app:register' %}"> Sign up</a> here</p>
+{% extends 'base.html'%}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+   Login - Page
+{% endblock title %}
+
+{% block content %}
+
+<div class="container m-5">
+
+    <h2  class=" mb-3">Login</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form | crispy }}
+      <button class="btn btn-primary" type="submit">Login</button>
+    </form>
+    <p>You don't have an account? <a href="{% url 'Users_app:register' %}"> Sign up</a> here</p>
+  </div>
+{% endblock content %}

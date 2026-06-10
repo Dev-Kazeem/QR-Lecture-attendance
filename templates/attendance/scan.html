@@ -1,3 +1,11 @@
+{% extends 'base.html'%}
+
+{% block title %}
+   Scan - Page
+{% endblock title %}
+
+
+{% block content %}
 <h2>Scan QR to Mark Attendance</h2>
 <div id="reader" style="width:300px"></div>
 <p id="result"></p>
@@ -21,3 +29,4 @@ let html5QrcodeScanner = new Html5QrcodeScanner(
 );
 html5QrcodeScanner.render(onScanSuccess);
 </script>
+{% endblock content %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Lecturer - dashboard 
+{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+  <!-- Left: Start Session -->
+  <div class="col-md-4">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Start New Session</h5>
+      </div>
+      <div class="card-body">
+        <form method="post" action="{% url 'attendance_app:start_session' course.id %}">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+            <label class="form-label">Select Course</label>
+            <select name="course_id" class="form-select" required>
+              <option value="">-- Choose course --</option>
+              {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.code }} - {{ course.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          
+          <button type="submit" class="btn btn-success w-100">
+            Generate QR Code
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Past Sessions -->
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-header">
+        <h5 class="mb-0">Recent Sessions</h5>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Course</th>
+              <th>Date & Time</th>
+              <th>Duration</th>
+              <th>Students Present</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for session in sessions %}
+            <tr>
+              <td>{{ session.course.code }}</td>
+              <td>{{ session.start_time|date:"Y-m-d H:i" }}</td>
+              <td>
+                {% if session.end_time %}
+                  {{ session.end_time|timesince:session.start_time }}
+                {% else %}
+                  Running
+                {% endif %}
+              </td>
+              <td>{{ session.attendance_set.count }}</td>
+              <td>
+                {% if session.is_active %}
+                  <span class="badge bg-success">Active</span>
+                {% else %}
+                  <span class="badge bg-secondary">Ended</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if session.is_active %}
+                  <a href="{% url 'attendance_app:get_qr_image' session.id %}" class="btn btn-sm btn-primary">View QR</a>
+                {% else %}
+                  <a href="{% url 'attendance_app:session_detail' session.id %}" class="btn btn-sm btn-outline-secondary">Details</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">
+                No sessions yet. Start one from the left.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

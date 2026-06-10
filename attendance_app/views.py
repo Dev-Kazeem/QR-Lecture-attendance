@@ -1,26 +1,52 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse, HttpResponseForbidden
+from django.http import JsonResponse, HttpResponseForbidden, HttpResponse
 from django.utils import timezone
 from .models import Course, LectureSession, Attendance
 import qrcode
 import base64
 from io import BytesIO
+import csv
+from openpyxl import Workbook
+
+
+
+
+
+
 
 def is_lecturer(user):
     return user.is_authenticated and user.is_staff
+
+@login_required
+@user_passes_test(is_lecturer)
+def lecturer_dashboard(request):
+    # Only show courses assigned to this lecturer
+    courses = Course.objects.filter(lecturer=request.user)
+    
+    # Last 20 sessions by this lecturer
+    sessions = LectureSession.objects.filter(
+        course__lecturer=request.user
+    ).select_related('course').order_by('-date')[:20]
+    
+    return render(request, 'attendance/lecturer_dashboard.html', {
+        'courses': courses,
+        'sessions': sessions
+    })
 
 
 @login_required
 @user_passes_test(is_lecturer)
 def start_session(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-    # close any active for session this first
-    LectureSession.objects.filter(lecturer=request.user, is_active=True).update(is_active=False)
+     if request.method != 'POST':
+        return redirect('attendance_app:lecturer_dashboard')
+     course_id = request.POST.get('course_id')
+     course = get_object_or_404(Course, id=course_id, lecturer=request.user)
+    # close any active for this session first
+     LectureSession.objects.filter(lecturer=request.user, is_active=True).update(is_active=False)
 
-    session = LectureSession.objects.create(course=course, lecturer=request.user, is_active=True)
-    return redirect('attendance_app:session_qr', session_id=session.id) 
-
+     session = LectureSession.objects.create(course=course, lecturer=request.user, is_active=True)
+     return redirect('attendance_app:session_qr', session_id=session.id) 
 
 
 
@@ -108,3 +134,71 @@ def attendance_list(request, session_id):
         return JsonResponse({'count':count})
     records = Attendance.objects.filter(session=session).select_related('student')
     return render(request, 'attendance/attendance_list.html', {'records': records})
+
+
+
+
+
+
+
+
+
+
+@login_required
+@user_passes_test(is_lecturer)
+def session_detail(request, session_id):
+    session = get_object_or_404(LectureSession, id=session_id, course__lecturer=request.user)
+    attendances = session.attendance_set.select_related('student', 'student__profile').order_by('timestamp')
+    return render(request, 'attendance/session_detail.html', {
+        'session': session,
+        'attendances': attendances
+    })
+
+@login_required
+@user_passes_test(is_lecturer)
+def export_csv(request, session_id):
+    session = get_object_or_404(LectureSession, id=session_id, course__lecturer=request.user)
+    attendances = session.attendance_set.select_related('student', 'student__profile').order_by('timestamp')
+    
+    response = HttpResponse(content_type='text/csv')
+    filename = f"{session.course.code}_{session.start_time.date()}.csv"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    writer = csv.writer(response)
+    writer.writerow(['S/N', 'Student ID', 'Full Name', 'Username', 'Time'])
+    
+    for i, att in enumerate(attendances, 1):
+        writer.writerow([
+            i,
+            att.student.profile.student_id if hasattr(att.student, 'profile') else '',
+            att.student.get_full_name(),
+            att.student.username,
+            att.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        ])
+    return response
+
+@login_required
+@user_passes_test(is_lecturer)
+def export_excel(request, session_id):
+    session = get_object_or_404(LectureSession, id=session_id, course__lecturer=request.user)
+    attendances = session.attendance_set.select_related('student', 'student__profile').order_by('timestamp')
+    
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Attendance"
+    
+    ws.append(['S/N', 'Student ID', 'Full Name', 'Username', 'Time Marked'])
+    for i, att in enumerate(attendances, 1):
+        ws.append([
+            i,
+            att.student.profile.student_id if hasattr(att.student, 'profile') else '',
+            att.student.get_full_name(),
+            att.student.username,
+            att.timestamp
+        ])
+    
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    filename = f"{session.course.code}_{session.start_time.date()}.xlsx"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+    return response
