@@ -1,0 +1,20 @@
+<!--<h2>Bulk Create Students via CSV</h2>
+
+<p>Upload CSV with columns: <code>username,email,first_name,last_name,student_id</code></p>
+<p><a href="#" onclick="alert('Sample:\nusername,email,first_name,last_name,student_id\njohn23,john@school.com,John,Doe,CS2023001')">Download sample format</a></p>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload & Create</button>
+</form>
+
+<a href="{% url 'Users_app:user_list' %}">Back to Users</a>
+
+{% if messages %}
+<ul>
+{% for message in messages %}
+    <li style="color:{% if message.tags == 'success' %}green{% else %}red{% endif %}">{{ message }}</li>
+{% endfor %}
+</ul>
+{% endif %}-->

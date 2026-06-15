@@ -1,0 +1,22 @@
+<h2>Create New User</h2>
+<form method="post">
+  {% csrf_token %}
+  
+  {{ form.username.label_tag }} {{ form.username }}<br><br>
+  {{ form.email.label_tag }} {{ form.email }}<br><br>
+  {{ form.first_name.label_tag }} {{ form.first_name }}<br><br>
+  {{ form.last_name.label_tag }} {{ form.last_name }}<br><br>
+  
+  <label>Role:</label><br>
+  {{ form.role }}<br><br>
+  
+  {{ form.password1.label_tag }} {{ form.password1 }}<br><br>
+  {{ form.password2.label_tag }} {{ form.password2 }}<br><br>
+  
+  {% if form.errors %}
+    <div style="color:red">{{ form.errors }}</div>
+  {% endif %}
+  
+  <button type="submit">Create User</button>
+</form>
+<a href="{% url 'Users_app:user_list' %}">View All Users</a>

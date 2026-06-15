@@ -8,14 +8,30 @@
 
 {% block content %}
 
-<div class="container m-5">
 
-    <h2  class=" mb-3">Login</h2>
-    <form method="post">
-      {% csrf_token %}
-      {{ form | crispy }}
-      <button class="btn btn-primary" type="submit">Login</button>
-    </form>
-    <p>You don't have an account? <a href="{% url 'Users_app:register' %}"> Sign up</a> here</p>
-  </div>
+<div class="container ">
+ <div class="row justify-content-center mt-5">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow bottom-up">
+                <div class="card-body py-4">
+                     <h3 class="card-title text-center mb-4 fw-bold">Login</h3><br>
+                     <form method="post">
+                       {% csrf_token %}
+                      <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username">
+                      </div>
+                      <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password">
+                      </div>
+          
+                      <button type="submit" class="btn btn-primary btn-lg  w-100 mt-3">Login</button>
+                    </form>
+                <div class="mt-2">You don't have an account? <a href="{% url 'Users_app:register' %}"> SignUp</a> here</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

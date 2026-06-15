@@ -138,6 +138,6 @@ STATICFILES_DIRS = [
 
 
 LOGIN_URL = 'Users_app:login'
-LOGIN_REDIRECT_URL = 'attendance_app:scan_page'  # students go here by default
-LOGIN_REDIRECT_URL = 'attendance_app:lecturer_dashboard'
+LOGIN_REDIRECT_URL = 'attendance_app:lecturer_dashboard'  # students go here by default
+
 LOGOUT_REDIRECT_URL = 'Users_app:login'

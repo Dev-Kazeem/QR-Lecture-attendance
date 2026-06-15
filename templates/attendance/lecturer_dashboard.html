@@ -1,11 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 
 {% block title %}
-  Lecturer - dashboard 
-{% endblock title %}
+
+ Lecturer - dashboard 
+
+{% endblock title %} 
 
 {% block content %}
-
+<div class="text-center text-primary fw-bold display-6 mb-3">Lecturer Dashboard</div>
 <div class="row">
   <!-- Left: Start Session -->
   <div class="col-md-4">
@@ -14,19 +16,21 @@
         <h5 class="mb-0">Start New Session</h5>
       </div>
       <div class="card-body">
-        <form method="post" action="{% url 'attendance_app:start_session' course.id %}">
+        <form method="post" action="{% url 'attendance_app:start_session'  %}">
           {% csrf_token %}
-          
+
           <div class="mb-3">
             <label class="form-label">Select Course</label>
             <select name="course_id" class="form-select" required>
               <option value="">-- Choose course --</option>
               {% for course in courses %}
-                <option value="{{ course.id }}">{{ course.code }} - {{ course.name }}</option>
+              <option value="{{ course.id }}">
+                {{ course.code }} - {{ course.name }}
+              </option>
               {% endfor %}
             </select>
           </div>
-          
+
           <button type="submit" class="btn btn-success w-100">
             Generate QR Code
           </button>
@@ -59,25 +63,31 @@
               <td>{{ session.course.code }}</td>
               <td>{{ session.start_time|date:"Y-m-d H:i" }}</td>
               <td>
-                {% if session.end_time %}
-                  {{ session.end_time|timesince:session.start_time }}
-                {% else %}
-                  Running
-                {% endif %}
+                {% if session.end_time %} {{
+                session.end_time|timesince:session.start_time }} {% else %}
+                Running {% endif %}
               </td>
               <td>{{ session.attendance_set.count }}</td>
               <td>
                 {% if session.is_active %}
-                  <span class="badge bg-success">Active</span>
+                <span class="badge bg-success">Active</span>
                 {% else %}
-                  <span class="badge bg-secondary">Ended</span>
+                <span class="badge bg-secondary">Ended</span>
                 {% endif %}
               </td>
               <td>
                 {% if session.is_active %}
-                  <a href="{% url 'attendance_app:get_qr_image' session.id %}" class="btn btn-sm btn-primary">View QR</a>
+                <a
+                  href="{% url 'attendance_app:session_qr' session.id %}"
+                  class="btn btn-sm btn-primary"
+                  >View QR</a
+                >
                 {% else %}
-                  <a href="{% url 'attendance_app:session_detail' session.id %}" class="btn btn-sm btn-outline-secondary">Details</a>
+                <a
+                  href="{% url 'attendance_app:session_detail' session.id %}"
+                  class="btn btn-sm btn-outline-secondary"
+                  >Details</a
+                >
                 {% endif %}
               </td>
             </tr>

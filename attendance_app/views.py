@@ -8,7 +8,8 @@ import base64
 from io import BytesIO
 import csv
 from openpyxl import Workbook
-
+from django.urls import reverse
+from django.contrib import messages
 
 
 
@@ -37,7 +38,7 @@ def lecturer_dashboard(request):
 
 @login_required
 @user_passes_test(is_lecturer)
-def start_session(request, course_id):
+def start_session(request):
      if request.method != 'POST':
         return redirect('attendance_app:lecturer_dashboard')
      course_id = request.POST.get('course_id')
@@ -67,7 +68,9 @@ def get_qr_image(request, session_id):
     # Rotate token every time this is called
     session.rotate_token()
 
-    qr_url = request.build_absolute_uri(f"/attend/{session.qr_token}/")
+    qr_url = request.build_absolute_uri(
+        reverse('attendance_app:mark_attendance', args=[session.qr_token])
+    )
     qr = qrcode.make(qr_url)
     buffer = BytesIO()
     qr.save(buffer, format='PNG')
@@ -111,6 +114,7 @@ def mark_attendance(request, token):
     
     # 3. Check if user is student, not lecturer
     if request.user.is_staff:
+        messages.info(request, "Lecturers can't mark attendance")
         return HttpResponseForbidden("Lecturers can't mark attendance")
     
     # 4. Check if already marked - prevents double scan

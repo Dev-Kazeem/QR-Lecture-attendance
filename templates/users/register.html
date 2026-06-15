@@ -1,6 +1,7 @@
 {% extends 'base.html'%}
 
 {% load crispy_forms_tags %}
+{% load crispy_forms_field %}
 
 {% block title %}
      Register - Page
@@ -11,14 +12,52 @@
 
 
 <div class="container m-5">
-
-    <h2 class="mb-3">Create Account</h2>
-    <form action="." method="post">
-        {{ form | crispy }}
-        {% csrf_token %}
-        <hr>
-        <button class="btn btn-primary" type="submit">Sign Up</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'Users_app:login' %}"> Login</a> here</p>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow bottom-up">
+                <div class="card-body py-4">
+                <h3 class="card-title text-center mb-4 fw-bold">Create Account</h3><br>
+                    <form method="post" action="." novalidate >
+                        {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12 col-sm-6">
+                            <label for="username" type="text" class="mb-3">Username:</label>
+                            {% crispy_field form.username 'class' 'form-control mb-3' 'placeholder' 'username' %}
+                        </div>
+                        <div class="col-md-12 col-sm-6">
+                            <label for="first name" type="text" class="mb-3">First name:</label>
+                            {% crispy_field form.first_name 'class' 'form-control mb-3' 'placeholder' 'first name' %}
+                        </div>
+                        <div class="col-md-12 col-sm-6">
+                            <label for="last name" class="mb-3">Last name:</label>
+                            {% crispy_field form.last_name 'class' 'form-control mb-3' 'placeholder' 'last name' %}
+                        </div>
+                        <div class="col-md-12 col-sm-6">
+                            <label for="student_id" class="mb-3">Admission No:</label>
+                            {% crispy_field form.student_id 'class' 'form-control mb-3' 'placeholder' 'Optional for staffs' %}
+                        </div>
+                        <div class="col-md-12 col-sm-6">
+                            <label for="email" class="mb-3">Email:</label>
+                            {% crispy_field form.email 'class' 'form-control mb-3' 'placeholder' 'email' %}
+                        </div>
+                        <div class="col-md-12 col-sm-6">
+                            <label for="password1" class="mb-3">Password:</label>
+                            {% crispy_field form.password1 'class' 'form-control mb-3' 'placeholder' 'password' %}
+                        </div>
+                    </div>
+                    <div>
+                        <label for="password2" class="col-md-3 mb-3">Comfirm Password:</label>
+                        {% crispy_field form.password2 'class' 'form-control mb-3' 'placeholder' 'Comfirm password' %}
+                        <label  for="role" class="col-md-3 mb-3"> Role:</label>
+                        {% crispy_field form.role 'class' ' mb-3' 'placeholder' 'role' %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">Sign Up</button>
+                    </form>
+                    <div class="mt-2">Already have an account <a href="{% url 'Users_app:login' %}"> Login</a> here</div>
+               </div>
+           </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}

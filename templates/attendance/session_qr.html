@@ -6,7 +6,7 @@
 
 
 {% block content %}
-
+<center>
 <h2>{{ session.course.code }} - Active Session</h2>
 <p>QR refreshes every 45s. Scan within 2 minutes .</p>
 <img src="" id="qr-img" width="250"> 
@@ -46,5 +46,5 @@
     setInterval(updateTimer, 1000);
     setInterval(refreshCount, 5000);
 </script>
-
+</center>
 {% endblock content %}

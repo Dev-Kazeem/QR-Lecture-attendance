@@ -1,0 +1,18 @@
+<h2>Users</h2>
+<a href="{% url 'Users_app:create_user' %}">+ Add User</a>
+<table border="1" cellpadding="8">
+<tr>
+  <th>Username</th>
+  <th>Name</th>
+  <th>Role</th>
+  <th>Date Joined</th>
+</tr>
+{% for u in users %}
+<tr>
+  <td>{{ u.username }}</td>
+  <td>{{ u.get_full_name }}</td>
+  <td>{% if u.is_staff %}Lecturer{% else %}Student{% endif %}</td>
+  <td>{{ u.date_joined|date:"Y-m-d" }}</td>
+</tr>
+{% endfor %}
+</table>
