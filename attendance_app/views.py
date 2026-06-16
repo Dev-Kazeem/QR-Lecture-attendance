@@ -94,6 +94,16 @@ def end_session(request, session_id):
     return redirect('attendance_app:start_session', course_id=session.course.id)
 
 
+
+@login_required
+@user_passes_test(is_lecturer)
+def Delete_session(request, session_id):
+    session =  get_object_or_404(LectureSession, id=session_id, lecturer=request.user)
+    session.delete()
+    return redirect('attendance_app:lecturer_dashboard')
+
+
+
 @login_required
 def scan_page(request):
     return render(request, 'Attendance/scan.html')
@@ -115,7 +125,8 @@ def mark_attendance(request, token):
     # 3. Check if user is student, not lecturer
     if request.user.is_staff:
         messages.info(request, "Lecturers can't mark attendance")
-        return HttpResponseForbidden("Lecturers can't mark attendance")
+        return render(request, 'attendance/attend_result.html', {'status': 'forbidden', 'session': session})
+        #return HttpResponseForbidden("Lecturers can't mark attendance")
     
     # 4. Check if already marked - prevents double scan
     if Attendance.objects.filter(student=request.user, session=session).exists():

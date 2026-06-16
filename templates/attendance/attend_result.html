@@ -17,6 +17,9 @@
     {% elif status == 'expired' %}
       <h2 class="text-danger">❌ QR Expired</h2>
       <p>Ask lecturer for new QR code.</p>
+    {% elif status == 'forbidden' %}
+      <h2 class="text-danger">❌ Lecturer is not allowed to scan QR </h2>
+      <p> Lecturer can only Generate QR for the student to scan !!!.</p>
     {% else %}
       <h2 class="text-danger">❌ Session Ended</h2>
     {% endif %}

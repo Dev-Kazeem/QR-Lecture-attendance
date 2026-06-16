@@ -55,13 +55,14 @@
               <th>Students Present</th>
               <th>Status</th>
               <th>Action</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
             {% for session in sessions %}
             <tr>
               <td>{{ session.course.code }}</td>
-              <td>{{ session.start_time|date:"Y-m-d H:i" }}</td>
+              <td>{{ session.date|date:"Y-m-d H:i" }}</td>
               <td>
                 {% if session.end_time %} {{
                 session.end_time|timesince:session.start_time }} {% else %}
@@ -90,6 +91,9 @@
                 >
                 {% endif %}
               </td>
+              <td>
+               <a class="btn btn-danger" data-bs-target="#deleteModal" data-bs-toggle="modal" type="button" href="{% url 'attendance_app:delete_session' session.id %}"><i class="bi bi-trash"></i></a>
+              </td>
             </tr>
             {% empty %}
             <tr>
@@ -104,5 +108,35 @@
     </div>
   </div>
 </div>
+{% for session in sessions %}
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                Are you sure you want to delete "{{ session.course.code }} - {{ session.date|date:"Y-m-d H:i" }}"?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <form method="post" action="{% url 'attendance_app:delete_session' session.id %}"">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        Delete
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

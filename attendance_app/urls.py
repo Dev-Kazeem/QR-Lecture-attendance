@@ -9,6 +9,7 @@ urlpatterns = [
     path('session/<int:session_id>/qr/', views.session_qr, name='session_qr'),
     path('session/<int:session_id>/qr-image/', views.get_qr_image, name='get_qr_image'),
     path('session/<int:session_id>/end/', views.end_session, name='end_session'),
+    path('session/delete/<int:session_id>/', views.Delete_session, name='delete_session'),
     path('session/<int:session_id>/students/', views.attendance_list, name='attendance_list'),
    
     path('session/<int:session_id>/detail/', views.session_detail, name='session_detail'),

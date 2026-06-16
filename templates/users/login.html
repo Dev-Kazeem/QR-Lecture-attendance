@@ -14,11 +14,11 @@
         <div class="col-md-6 col-lg-5">
             <div class="card shadow bottom-up">
                 <div class="card-body py-4">
-                     <h3 class="card-title text-center mb-4 fw-bold">Login</h3><br>
+                     <h3 class="card-title text-center bg-dark text-white mb-1 p-4 fw-bold">Login</h3><hr>
                      <form method="post">
                        {% csrf_token %}
                       <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
+                        <label for="username" class="form-label mt-2">Username</label>
                         <input type="text" class="form-control" name="username">
                       </div>
                       <div class="mb-3">
@@ -26,9 +26,9 @@
                         <input type="password" class="form-control" name="password">
                       </div>
           
-                      <button type="submit" class="btn btn-primary btn-lg  w-100 mt-3">Login</button>
+                      <button type="submit" class="btn btn-primary btn-lg  w-100 mt-3">Sign in</button>
                     </form>
-                <div class="mt-2">You don't have an account? <a href="{% url 'Users_app:register' %}"> SignUp</a> here</div>
+                <div class="mt-3">You don't have an account? <a href="{% url 'Users_app:register' %}"> SignUp</a> here</div>
                 </div>
             </div>
         </div>
