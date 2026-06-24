@@ -10,6 +10,11 @@ import csv
 from openpyxl import Workbook
 from django.urls import reverse
 from django.contrib import messages
+from openpyxl.styles import Font, Alignment, PatternFill
+from openpyxl.utils import get_column_letter
+
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 
 
@@ -156,15 +161,12 @@ def attendance_list(request, session_id):
 
 
 
-
-
-
 @login_required
 @user_passes_test(is_lecturer)
 def session_detail(request, session_id):
     session = get_object_or_404(LectureSession, id=session_id, course__lecturer=request.user)
-    attendances = session.attendance_set.select_related('student', 'student__profile').order_by('timestamp')
-    return render(request, 'attendance/session_detail.html', {
+    attendances = session.attendance_set.select_related('student', ).order_by('timestamp')
+    return render(request, 'attendance/session_details.html', {
         'session': session,
         'attendances': attendances
     })
@@ -192,28 +194,98 @@ def export_csv(request, session_id):
         ])
     return response
 
+
 @login_required
 @user_passes_test(is_lecturer)
 def export_excel(request, session_id):
     session = get_object_or_404(LectureSession, id=session_id, course__lecturer=request.user)
-    attendances = session.attendance_set.select_related('student', 'student__profile').order_by('timestamp')
-    
+    attendances = session.attendance_set.select_related('student').order_by('timestamp')
+
     wb = Workbook()
     ws = wb.active
     ws.title = "Attendance"
-    
-    ws.append(['S/N', 'Student ID', 'Full Name', 'Username', 'Time Marked'])
+
+    # 1. Add title + session info at top
+    ws['A1'] = f"{session.course.code} - {session.course.name}"
+    ws['A2'] = f"Date: {session.date}"
+    ws['A3'] = f"Total Present: {attendances.count()}"
+    ws.merge_cells('A1:D1')
+    ws.merge_cells('A2:D2')
+    ws.merge_cells('A3:D3')
+
+    # Style title
+    ws['A1'].font = Font(size=14, bold=True)
+    ws['A1'].alignment = Alignment(horizontal='center')
+
+    # 2. Header row
+    headers = ['S/N', 'Matric Num', 'Full Name', 'Date & Time Marked']
+    ws.append(headers)
+    header_row = ws[5]
+
+    # Style headers
+    fill = PatternFill(start_color="1a4d8f", end_color="1a4d8f", fill_type="solid")
+    for cell in header_row:
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = fill
+        cell.alignment = Alignment(horizontal='center')
+
+    # 3. Data rows
     for i, att in enumerate(attendances, 1):
-        ws.append([
-            i,
-            att.student.profile.student_id if hasattr(att.student, 'profile') else '',
-            att.student.get_full_name(),
-            att.student.username,
-            att.timestamp
-        ])
-    
+        matric = att.student.student_id if att.student_id else 'N/A'
+        name = att.student.get_full_name() or att.student.username
+        timestamp = att.timestamp.astimezone(timezone.get_current_timezone()).strftime('%d/%m/%Y %H:%M')
+
+        ws.append([i, matric, name, timestamp])
+
+    # 4. Auto-adjust column widths
+    column_widths = [8, 18, 30, 22]
+    for i, width in enumerate(column_widths, 1):
+        ws.column_dimensions[get_column_letter(i)].width = width
+
+    # 5. Freeze header row
+    ws.freeze_panes = 'A6'
+
+    # 6. Better filename
+    date_str = session.date.strftime('%Y%m%d')
+    filename = f"{session.course.code}_{date_str}_Attendance.xlsx"
+
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    filename = f"{session.course.code}_{session.start_time.date()}.xlsx"
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     wb.save(response)
+    return response
+
+
+
+
+
+
+
+@login_required
+@user_passes_test(is_lecturer)
+def export_pdf(request, session_id):
+    session = get_object_or_404(LectureSession, id=session_id, course__lecturer=request.user)
+    attendances = session.attendance_set.select_related('student').order_by('timestamp')
+
+    # Convert UTC to Nigeria time WAT
+    nigeria_tz = timezone.get_current_timezone()
+    
+    context = {
+        'session': session,
+        'attendances': attendances,
+        'total': attendances.count(),
+        'generated': timezone.now().astimezone(nigeria_tz),
+        'nigeria_tz': nigeria_tz
+    }
+
+    template = get_template('attendance/lecture_session_pdf.html')
+    html = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    date_str = session.date.strftime('%Y%m%d')
+    filename = f"{session.course.code}_{date_str}_Attendance.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Error generating PDF', status=500)
     return response

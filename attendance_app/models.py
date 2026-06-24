@@ -2,14 +2,15 @@ from django.db import models
 
 from django.utils import timezone
 from datetime import timedelta
-from django.contrib.auth.models import User
-import uuid
+
+import uuid 
+from django.conf import settings
 
 
 class Course(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=20)
-    lecturer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, limit_choices_to={'is_staff': True})
+    lecturer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, limit_choices_to={'is_staff': True})
     
     def __str__(self):
         return f"{self.code} - {self.name}"
@@ -17,7 +18,7 @@ class Course(models.Model):
 
 class LectureSession(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    lecturer = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_staff':True})
+    lecturer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'is_staff':True})
     date = models.DateTimeField(auto_now_add=True)
     qr_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     token_created_at = models.DateTimeField(auto_now_add=True)
@@ -43,7 +44,7 @@ class LectureSession(models.Model):
 
 
 class Attendance(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     session = models.ForeignKey(LectureSession, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 

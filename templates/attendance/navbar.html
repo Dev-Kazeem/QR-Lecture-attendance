@@ -1,0 +1,51 @@
+<nav class="navbar  fixed-top mb-4" style="background-color: #0f172a;">
+  <div class="container">
+    <a class="fw-bold text-success nav-link fst-italic" href="/">UDUS QR ATTENDANCE</a>
+    {% if user.is_authenticated %}
+
+      <span class="text-white">Welcome {{ user.username }}</span>
+      <form method="post" action="{% url 'Users_app:logout' %}">
+        {% csrf_token %}
+        <button  class="btn btn-outline-light fw-bold"><i class="bi bi-box-arrow-in-left mx-1"></i>Logout</button>
+      </form>
+      <a href="{%  url 'attendance_app:scan_page' %}" class="nav-link text-white ">Scan</a>
+
+        
+      <button class=" btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions"><span class="navbar-toggler-icon text-white"></span></button>
+
+      <div class="offcanvas offcanvas-start"  data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title text-success" id="offcanvasWithBothOptionsLabel"> <i class="bi bi-mortarboard-fill"></i>   UDUS - Computer science</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" style="background-color: #0f172a;">
+          <p class="mt-5 px-3">
+            <a class="navbar-brand text-white" href="/"><i class="bi bi-house-down-fill p-2"></i>Home</a>
+          </p>
+          {% if user.is_staff %}
+          <p class="px-3">
+            <a href="{% url 'attendance_app:lecturer_dashboard' %}" class="nav-link text-white navbar-brand"><i class="bi bi-window-dash p-2"></i>My Dashboard</a>
+         </p>
+          <p class="px-3">
+            <a href="{% url 'attendance_app:lecturer_dashboard' %}" class="nav-link text-white navbar-brand"><i class="bi bi-gear p-2"></i>Admin Dashboard</a>
+         </p>
+        {% endif %}
+        <p class="px-3">
+            <a href="{% url 'Users_app:changePassword' %}" class="nav-link text-white navbar-brand"><i class="bi bi-gear p-2"></i>Change Password</a>
+        </p>
+         
+        </div>
+      </div>
+
+     
+
+    {% else %}
+       
+       <div class="float-right">
+        <a href="{%  url 'Users_app:register' %}" class="btn btn-outline-light fw-bold mx-2"><i class="bi bi-arrows-collapse-vertical mx-1"></i>Sign Up</a>
+        <a href="{%  url 'Users_app:login' %}" class="btn btn-outline-light fw-bold"><i class="bi bi-box-arrow-in-right mx-1"></i>Login</a>
+       </div>
+
+    {% endif %}
+  </div>
+</nav>

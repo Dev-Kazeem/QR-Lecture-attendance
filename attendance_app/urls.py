@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 app_name = 'attendance_app'
 
 urlpatterns = [
@@ -15,14 +16,13 @@ urlpatterns = [
     path('session/<int:session_id>/detail/', views.session_detail, name='session_detail'),
     
 
-    path('session/<int:session_id>/export-csv/', views.export_csv, name='export_csv'),
+    path('session/<int:session_id>/export-pdf/', views.export_pdf, name='export_pdf'),
     path('session/<int:session_id>/export-excel/', views.export_excel, name='export_excel'),
     path('attend/<uuid:token>/', views.mark_attendance, name='mark_attendance'),
     path('scan/', views.scan_page, name='scan_page'),
 
 
 
-    
 ]
 
 

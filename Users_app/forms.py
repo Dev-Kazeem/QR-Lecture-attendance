@@ -1,34 +1,39 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from Users_app.models import User
 
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    username = forms.CharField(max_length=50, required=True)
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
-    student_id = forms.CharField(max_length=20, required=False)
-    ROLE_CHOICES = (
-        ('student', 'Student'),
-        ('lecturer', 'Lecturer'),
-    )
-    role = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.RadioSelect)
+    email = forms.EmailField(required=True)
+    student_id = forms.CharField(max_length=20, required=True)
+   
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'student_id', 'email', 'password1', 'password2', 'role']
+        fields = ['username', 'first_name', 'last_name', 'email', 'student_id', 'password1', 'password2']
+    
+    def clean_student_id(self):
+        sid = self.cleaned_data['student_id'].strip().upper()
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        
-        # Map role to is_staff
-        if self.cleaned_data['role'] == 'lecturer':
-            user.is_staff = True
-        else:
-            user.is_staff = False
-            
-        if commit:
-            user.save()
-        return user
+        if not sid:
+            raise forms.ValidationError("student ID is required for student signup")
+
+        if User.objects.filter(student_id=sid).exists():
+             raise forms.ValidationError("student ID already exists")
+        return sid
+    
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].lower()
+        if User.objects.filter(email=email).exists():
+             raise forms.ValidationError("Email already exists")
+        return email
+    
+
+    def clean_username(self):
+        username = self.cleaned_data['username'].strip()
+        if User.objects.filter(username=username).exists():
+             raise forms.ValidationError("Username already exists")
+        return username

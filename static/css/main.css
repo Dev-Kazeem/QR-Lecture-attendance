@@ -1,0 +1,12 @@
+body{
+    padding-top: 60px;
+
+}
+
+.bg-image{
+    background: url(../images/faculty.jpg);
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    border-radius: 6px;
+}

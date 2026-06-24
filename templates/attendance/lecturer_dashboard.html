@@ -2,13 +2,13 @@
 
 {% block title %}
 
- Lecturer - dashboard 
+ Lecturer - dashboard|Page 
 
 {% endblock title %} 
-
+  
 {% block content %}
-<div class="text-center text-primary fw-bold display-6 mb-3">Lecturer Dashboard</div>
-<div class="row">
+
+<div class="row mt-5">
   <!-- Left: Start Session -->
   <div class="col-md-4">
     <div class="card shadow-sm mb-4">
@@ -68,7 +68,7 @@
                 session.end_time|timesince:session.start_time }} {% else %}
                 Running {% endif %}
               </td>
-              <td>{{ session.attendance_set.count }}</td>
+              <td class="fw-bold">{{ session.attendance_set.count }} <a href="{% url 'attendance_app:session_detail' session.id %}" class="btn btn-success btn-sm">Detail</a></td>
               <td>
                 {% if session.is_active %}
                 <span class="badge bg-success">Active</span>

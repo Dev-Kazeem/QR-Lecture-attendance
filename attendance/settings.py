@@ -28,9 +28,18 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
+# telling django to use my custom form
+AUTH_USER_MODEL = 'Users_app.User'
 
+# Telling django to use modelbackend to allowe user login using username or email
+AUTHENTICATION_BACKENDS = [
+    'Users_app.backends.EmailOrUsernameBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# Application definition
 INSTALLED_APPS = [
+    'Users_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'attendance_app',
-    'Users_app',
+    
 
     'crispy_forms',
     'crispy_bootstrap5',
@@ -125,7 +134,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 MEDIA_URL = 'media/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -138,6 +147,6 @@ STATICFILES_DIRS = [
 
 
 LOGIN_URL = 'Users_app:login'
-LOGIN_REDIRECT_URL = 'attendance_app:lecturer_dashboard'  # students go here by default
+LOGIN_REDIRECT_URL = 'attendance_app:lecturer_dashboard'  # lecturer goes here by default
 
 LOGOUT_REDIRECT_URL = 'Users_app:login'

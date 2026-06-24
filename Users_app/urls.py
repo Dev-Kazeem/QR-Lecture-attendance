@@ -10,4 +10,9 @@ urlpatterns = [
     path('login/', views.Login_view, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
+
+    path('changePassword/', auth_views.PasswordChangeView.as_view(template_name='users/change_password.html', success_url="/Users_app/Password-changed"), name='changePassword'),
+    
+    path('Password-changed', views.Password_Changed, name='Password-changed' ),
+
 ]

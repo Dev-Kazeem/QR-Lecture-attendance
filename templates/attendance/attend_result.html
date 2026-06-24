@@ -1,7 +1,7 @@
-{% extends 'base.html'%}
+{% include 'attendance/navbar.html'%}
 
 {% block title %}
-    Attendance - Status_Page
+    Attendance - Status|Page
 {% endblock title %}
 
 
@@ -11,6 +11,14 @@
     {% if status == 'success' %}
       <h2 class="text-success">✅ Attendance Marked</h2>
         <p>You are checked in for {{ session.course.name }}</p>
+        <div class="container mt-5 text-center" style="max-width: 400px;">
+        <div class="alert alert-success">
+          <h3>✓ Checked In!</h3>
+          <p>Attendance recorded for {{ session.course.code }}</p>
+          <p class="mb-0">Time: {% now "H:i:s" %}</p>
+        </div>
+        <a href="{% url 'attendance_app:scan_page' %}" class="btn btn-outline-primary">Scan Another QR</a>
+      </div>
     {% elif status == 'already' %}
       <h2 class="text-warning">⚠️ Already Marked</h2>
       <p>You’ve already scanned for this session.</p>
@@ -23,7 +31,7 @@
     {% else %}
       <h2 class="text-danger">❌ Session Ended</h2>
     {% endif %}
-    <a href="{% url 'attendance_app:scan_page' %}">Scan Again</a>
   </div>
+
 
 {% endblock content %}

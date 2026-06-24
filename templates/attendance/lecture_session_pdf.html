@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4 portrait; margin: 2cm; }
+    body { font-family: DejaVu Sans, Arial; font-size: 11px; }
+    .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #1a4d8f; padding-bottom: 10px; }
+    .header h2 { color: #1a4d8f; margin: 5px 0; }
+    .info { margin-bottom: 15px; }
+    .info b { display: inline-block; width: 120px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th { background: #1a4d8f; color: white; padding: 8px; border: 1px solid #1a4d8f; }
+    td { border: 1px solid #ddd; padding: 6px; }
+    tr:nth-child(even) { background: #f8f9fa; }
+    .footer { margin-top: 30px; text-align: right; font-size: 10px; color: #666; }
+    .signatures { margin-top: 50px; }
+    .signatures div { width: 45%; display: inline-block; }
+</style>
+</head>
+<body>
+    <div class="header">
+        <h2>ATTENDANCE SHEET</h2>
+        <p>{{ session.course.code }} - {{ session.course.title }}</p>
+    </div>
+
+    <div class="info">
+        <p><b>Course:</b> {{ session.course.code }} - {{ session.course.title }}</p>
+        <p><b>Lecturer:</b> Dr/Mr/Mrs {{ session.course.lecturer.get_full_name }}</p>
+        <p><b>Date:</b> {{ session.date|date:"l, d F Y" }}</p>
+        <p><b>Topic:</b> {{ session.topic }}</p>
+        <p><b>Total Present:</b> {{ total }} students</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th width="5%">S/N</th>
+                <th width="20%">Matric No</th>
+                <th width="45%">Full Name</th>
+                <th width="30%">Time Marked</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for att in attendances %}
+            <tr>
+                <td style="text-align:center">{{ forloop.counter }}</td>
+                <td>{{ att.student.student_id|default:"N/A" }}</td>
+                <td>{{ att.student.get_full_name|default:att.student.username }}</td>
+                <td>{{ att.timestamp|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align:center; padding:20px">No students marked present</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="signatures">
+        <div>
+            <p>____________________</p>
+            <p>Lecturer's Signature & Date</p>
+        </div>
+        <div style="float:right">
+            <p>____________________</p>
+            <p>HOD's Signature & Date</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        Generated on {{ generated|date:"d/m/Y H:i" }} | QR Attendance System
+    </div>
+</body>
+</html>
