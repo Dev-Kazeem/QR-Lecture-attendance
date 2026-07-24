@@ -39,6 +39,7 @@ AUTHENTICATION_BACKENDS = [
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'Users_app',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -150,3 +151,49 @@ LOGIN_URL = 'Users_app:login'
 LOGIN_REDIRECT_URL = 'attendance_app:lecturer_dashboard'  # lecturer goes here by default
 
 LOGOUT_REDIRECT_URL = 'Users_app:login'
+
+
+
+# settings.py
+
+JAZZMIN_SETTINGS = {
+    # Title of the window (Browser tab title)
+    "site_title": "Admin Control Panel",
+    
+    # Title on the login screen (Max 19 characters)
+    "site_header": "UDUS QR ATTENDANCE",
+    
+    # Title on the brand text (Top left on the main dashboard sidebar)
+    "site_brand": "UDUS QR ATTENDANCE",
+    
+    # Welcome sign on the login interface
+    "welcome_sign": "Welcome back! Please sign in to manage operations.",
+    
+    # Copyright text inside the global footer element
+    "copyright": "UDUS QR",
+    
+    # The model that will populate the global top-search bar if defined
+    "search_model": ["auth.User"],
+
+    # User Menu links on the top right (e.g., links to your main frontend site)
+    "usermenu_links": [
+        {"name": "View Live Site", "url": "/", "new_window": True},
+    ],
+    
+    # Whether to show the sidebar organizer tool toggle
+    "show_sidebar": True,
+    "navigation_expanded": True,
+
+
+    # Append this inside the JAZZMIN_SETTINGS dictionary
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        # Custom example: If you have a 'blog' app with a 'Post' model
+        # "blog.post": "fas fa-file-alt",
+    },
+    # Default icon for apps/models that don't have an explicit icon set
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+}

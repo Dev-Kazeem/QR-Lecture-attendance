@@ -7,8 +7,8 @@
 
 {% block content %}
 <center>
-<div class="container justify-content-center mt-5">
-<h2>Scan QR to Mark Attendance</h2>
+<div class="container mt-5">
+<h2 class="mb-5">Scan QR to Mark Attendance</h2>
 <div id="reader" style="width:300px"></div>
 <p id="result"></p>
 
@@ -32,5 +32,11 @@ let html5QrcodeScanner = new Html5QrcodeScanner(
 html5QrcodeScanner.render(onScanSuccess);
 </script>
 </div>
+
+ <footer class="mt-5 text-white-50 text-center  bottom-0 start-0  z-0">
+        <p>
+          @All right reserved &copy; UDUS 2026
+        </p>
+</footer>
 </center>
 {% endblock content %}

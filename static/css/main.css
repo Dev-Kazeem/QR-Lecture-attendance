@@ -3,10 +3,10 @@ body{
 
 }
 
-.bg-image{
-    background: url(../images/faculty.jpg);
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: multiply;
-    border-radius: 6px;
+.footer{
+    position: fixed;
+    top: 100%;
+    bottom: 0px;
+    left: 100%;
+
 }

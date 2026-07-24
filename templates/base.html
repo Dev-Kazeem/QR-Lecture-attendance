@@ -14,26 +14,74 @@
         {% endblock title %}
   </title>
 </head>
-<body>
+<body class="text-bg-dark m-3">
 {% include 'attendance/navbar.html' %}
-<div class="container">
+
 
   {% block content %}
-    <div class="p-5 p-md-5  m-2 text-body-emphasis bg-body-tertiary shadow  bg-image">
-    <div class="col-lg-6 px-0">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    
+  
+      <main class="px-3">
+        <h2 class="text-center fst-italic">Hi {% if user.is_authenticated %} {{ user.get_full_name }} {% else %} Welcome to Qr Attendance Platform...{% endif %}</h2>
+        <p class="lead text-center m-5 py-3 px-3">
+          Hi welcome to udus computer science QR  lecture attendance platform, this platform was design primarily for computer science department this platform will replace the stressful manual attendance which comsumed alot of time, this plaform is stress free the lecturer will display a qr for a particular lecture session and the student will login and scan the qr code, display by the lecturer.
+        </p>
+
+        {% if user.is_authenticated %}
+        <p class="lead text-center">
+          <a href="" class="btn btn-lg btn-light fw-bold border-white bg-white"
+            >Attendance is important</a>
+        </p>
+        {% else %}
+        <p class="lead text-center">
+         <a href="{% url 'Users_app:login' %}" class="btn btn-lg btn-light fw-bold border-white"
+          >Get started</a>
+        </p>
+        {% endif %}
+      </main>
+    </div>
+
+
+
+  <div class="container">
+    <section class="mt-5">
+    <div class="row p-5 p-md-5  m-2  shadow">
+    <div class="col-md-6">
+        <img class="d-md-block d-none" src="{% static 'images/faculty.jpg' %}" alt="" style="width: 480px; height: 380px;">
+        <img class="d-md-none d-block" src="{% static 'images/faculty.jpg' %}" alt="" style="width: 280px; height: 180px;">
+       <caption>Department of Computer Science UDUS.</caption>
+    </div>
+    <div class="col-md-6 ps-2">
           <h1 class="display-4 fst-italic" style="color: rgb(253, 167, 54);">
-            Faculty Electronic Suggestion Box
+             UDUS Computer science qr Lecture Attendance Platform
           </h1>
           <p class="text-white lead fw-bold my-3 hero-p">
-            Faculty of physical and computing science Usmanu Danfodiyo university sokoto
-            suggestion box, for efficient communication and freedom of expression among student, lecturers within the faculty...
-          </p>
-          
+            Department of computer science qr lecture attendance platform, is design for the department of computer science in other to reduce the stress and time consume while taking attendance of student during lecture. . .
+          </p> 
     </div>
 </div>
-
-  {% endblock content %}
+</section>
+<section class="mt-5">
+  <div class="text-center">
+    <div class="btn btn-primary text-white fw-bold m-5">
+        ABOUT COMPUTER SCIENCE QR ATTENDANCE
+    </div>
+    <div class="container-lg">
+      <p class="text-start mb-5">
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error commodi nisi a eaque voluptatum provident officia facere asperiores molestiae sequi est, fuga quae natus. Veritatis, eius obcaecati voluptatem veniam dignissimos provident voluptates adipisci cumque maiores a beatae, molestias doloribus? Facilis dolor velit possimus vel reiciendis. Nisi facilis placeat quod asperiores eveniet earum, a, laborum excepturi, et eligendi modi sequi adipisci. 
+      </p>
+    </div>
+  </div>
+</section>
+<footer class="mt-5 text-white-50 text-center bottom-0 start-0  z-0">
+        <p>
+          @All right reserved &copy; UDUS 2026
+        </p>
+      </footer>
 </div>
+  {% endblock content %}
+
 
 {% if messages %}
     {% for message in messages %}

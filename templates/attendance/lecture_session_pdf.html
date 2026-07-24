@@ -21,14 +21,13 @@
 <body>
     <div class="header">
         <h2>ATTENDANCE SHEET</h2>
-        <p>{{ session.course.code }} - {{ session.course.title }}</p>
+        <p>{{ session.course.code }} - {{ session.course.name }}</p>
     </div>
 
     <div class="info">
-        <p><b>Course:</b> {{ session.course.code }} - {{ session.course.title }}</p>
+        <p><b>Course:</b> {{ session.course.code }} - {{ session.course.name }}</p>
         <p><b>Lecturer:</b> Dr/Mr/Mrs {{ session.course.lecturer.get_full_name }}</p>
         <p><b>Date:</b> {{ session.date|date:"l, d F Y" }}</p>
-        <p><b>Topic:</b> {{ session.topic }}</p>
         <p><b>Total Present:</b> {{ total }} students</p>
     </div>
 

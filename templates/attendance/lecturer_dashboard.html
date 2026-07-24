@@ -7,12 +7,19 @@
 {% endblock title %} 
   
 {% block content %}
-
+<div class="container">
+  {% if user.is_authenticated %}
+<div class="text-center">  
+  <span><i class="bi bi-person-circle text-light fs-1"></i></span>
+  <p> @ {{ user.username }}  </p>
+</div>
+<p class="text-center lead fst-italic text-light"> {{ user.get_full_name }}  </p><hr>
+{% endif %}
 <div class="row mt-5">
   <!-- Left: Start Session -->
   <div class="col-md-4">
     <div class="card shadow-sm mb-4">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header bg-primary text-white ">
         <h5 class="mb-0">Start New Session</h5>
       </div>
       <div class="card-body">
@@ -139,4 +146,10 @@
     </div>
 </div>
 {% endfor %}
+ <footer class="mt-5 mb-0 text-white-50 text-center">
+        <span>
+          @All right reserved &copy; UDUS 2026
+        </span>
+  </footer>
+</div>
 {% endblock %}

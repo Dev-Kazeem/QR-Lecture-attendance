@@ -6,7 +6,7 @@
 
 
 {% block content %}
-
+<div class="container">
   <div class="text-center mt-5">
     {% if status == 'success' %}
       <h2 class="text-success">✅ Attendance Marked</h2>
@@ -32,6 +32,10 @@
       <h2 class="text-danger">❌ Session Ended</h2>
     {% endif %}
   </div>
-
-
+<footer class="mt-5 text-white-50 text-center  bottom-0 start-0  z-0">
+        <p>
+          @All right reserved &copy; UDUS 2026
+        </p>
+</footer>
+</div>
 {% endblock content %}

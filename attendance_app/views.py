@@ -96,7 +96,7 @@ def end_session(request, session_id):
     session =  get_object_or_404(LectureSession, id=session_id, lecturer=request.user)
     session.is_active = False
     session.save()
-    return redirect('attendance_app:start_session', course_id=session.course.id)
+    return redirect('attendance_app:lecturer_dashboard')
 
 
 
